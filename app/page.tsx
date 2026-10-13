@@ -110,9 +110,20 @@ export default function Home() {
         }),
       });
 
-      const data: { success: boolean; message: string } =
-        await response.json();
+     const text = await response.text();
 
+let data: { success: boolean; message: string };
+
+try {
+  data = JSON.parse(text) as {
+    success: boolean;
+    message: string;
+  };
+} catch {
+  throw new Error(
+    `Registration returned an invalid response (HTTP ${response.status}). Check the VS Code terminal.`
+  );
+}
       if (!response.ok || !data.success) {
         throw new Error(data.message || "Could not register student.");
       }
@@ -146,7 +157,7 @@ export default function Home() {
             STUDENT MANAGEMENT SYSTEM
           </p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">
-            StudentHub 🎓
+            StudentHub 
           </h1>
           <p className="mt-3 text-slate-600">
             Register students and manage your student records.
